@@ -20,6 +20,7 @@ class Distribution(BaseDataProvider):
         super().__init__(*args, **kwargs)
 
         random.seed(self.seed)
+        np.random.seed(self.seed)
 
     def _replace(self, value: Any, proportion: float = 0.0, replacement: Any = None) -> Any:
         """
