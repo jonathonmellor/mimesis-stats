@@ -15,7 +15,7 @@ requires = read_requirements("requirements.txt")
 dev_requires = read_requirements("requirements.dev.txt") + requires
 
 setuptools.setup(
-    name="mimesis-stats",
+    name="mimesis_stats",
     version="0.0.1",
     author="Jonathon Mellor",
     author_email="mellorjonathon1@gmail.com",
