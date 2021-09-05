@@ -32,7 +32,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages(where="src"),
-    python_requires="==3.6.8",
+    python_requires="=3.6.8",
     install_requires=requires,
     extras_require={"dev": dev_requires, "ci": dev_requires},
 )
