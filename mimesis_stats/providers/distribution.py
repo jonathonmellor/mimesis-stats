@@ -13,6 +13,10 @@ class Distribution(BaseDataProvider):
     Mimesis provider for generating data from non-uniform and uniform distributions.
 
     All methods replace values with None by given probability.
+
+    Notes
+    -----
+    Sets global numpy.random.seed to inherited/arg seed value.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -69,7 +73,7 @@ class Distribution(BaseDataProvider):
         null_value
             The (null) value to replace a sample with
         **kwargs
-            Key word arguments needed for func distribution
+            Keyword arguments needed for func distribution
 
         Returns
         -------
@@ -106,5 +110,10 @@ class Distribution(BaseDataProvider):
         Returns
         -------
         Single element from population or null_value
+
+        Examples
+        --------
+        >>>Distribution.distrete_distribution(population=["one", "two", "three"], weights=[0.01, 0.01, 0.98])
+        "three"
         """
         return self._replace(np.random.choice(population, size=None, p=weights), null_prop, replacement=null_value)
