@@ -15,7 +15,7 @@ def test_discrete_distribution_fixed(population, weights, return_value):
 
     generator = Distribution()
 
-    assert return_value == generator.discrete_distribution(population, weights)
+    assert generator.discrete_distribution(population, weights) == return_value
 
 
 @pytest.fixture
@@ -38,4 +38,4 @@ def test_generic_distribution_fixed(population, return_value, return_max_functio
 
     generator = Distribution()
 
-    assert return_value == generator.generic_distribution(func=return_max_function, population=population)
+    assert generator.generic_distribution(func=return_max_function, population=population) == return_value
