@@ -9,7 +9,16 @@ from mimesis_stats.providers.base_stats import BaseStatsDataProvider
 
 
 class Distribution(BaseStatsDataProvider):
-    """ """
+    """
+    Class for univariable distribution sampling.
+
+    Methods
+    -------
+    discrete_distribution
+        Discrete choices (categorical-type) variables
+    generic_distribution
+        Accepts functions for custom distribution.
+    """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
 
