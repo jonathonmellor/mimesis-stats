@@ -1,4 +1,5 @@
 from typing import Any
+from typing import Callable
 from typing import Dict
 from typing import Iterator
 from typing import List
@@ -30,7 +31,7 @@ class StatsSchema:
         self.blueprint = blueprint
         self.schema = self._create_schema()
 
-    def _create_schema(self):
+    def _create_schema(self) -> Callable:
         """
         Converts a blueprint object into a mimesis schema
         """
@@ -38,11 +39,13 @@ class StatsSchema:
             variable.name: self.field(variable.provider_method, **variable.kwargs) for variable in self.blueprint
         }
 
-    def _unnest(self, generated_results):
+    def _unnest(self, generated_results: Dict) -> Dict:
         """
         For multi-variable generation unest the defined sub-variables
+
+        Unnests nested dicts if they are nested.
         """
-        # make more performant
+        # make more performant, can nested-ness be checked?
         d = {}
         for k, v in generated_results.items():
             if isinstance(v, dict):
