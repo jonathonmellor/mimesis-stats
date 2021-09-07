@@ -82,4 +82,6 @@ class Distribution(BaseStatsDataProvider):
         >>>Distribution.distrete_distribution(population=["one", "two", "three"], weights=[0.01, 0.01, 0.98])
         "three"
         """
-        return self._replace(np.random.choice(population, size=None, p=weights), null_prop, replacement=null_value)
+        return self._replace(
+            np.random.choice(population, size=None, p=weights, replace=False), null_prop, replacement=null_value
+        )

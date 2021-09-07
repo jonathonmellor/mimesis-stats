@@ -1,4 +1,6 @@
 from typing import Any
+from typing import List
+from typing import Tuple
 
 import numpy as np
 from mimesis.providers.base import BaseDataProvider
@@ -36,7 +38,7 @@ class BaseStatsDataProvider(BaseDataProvider):
             Probability of individual replacement with null
             Matches overall proportion null desired at large sample size
         replacement
-            The null or otherwise value that with replace the input given
+            The null or otherwise value that will replace the input given
             the probability.
 
         Returns
@@ -54,3 +56,40 @@ class BaseStatsDataProvider(BaseDataProvider):
             return replacement
         else:
             return value
+
+    def _replace_multiple(self, values: Tuple[Any], proportions: List[float], replacements: Any) -> Tuple[Any, ...]:
+        """
+        Adaptation of self._replace() for multiple values.
+
+        Replace values with given probability.
+        Normally used with a None replacement.
+
+        Parameters
+        ----------
+        values
+            Values that may be replaced with Null value
+        proportion
+            Probability of individual replacement with null for each element in values.
+            Matches overall proportion null desired at large sample size
+        replacement
+            The null or otherwise value that will replace the input for the corresponding element given
+            the probability.
+
+        Returns
+        -------
+        Tuple[value or null for each value]
+
+        Notes
+        -----
+        Defaults cause no replacements
+        """
+        if not proportions:
+            return values
+
+        if replacements is None:
+            replacements = [None] * len(values)
+
+        value_triplets = zip(values, proportions, replacements)
+        return tuple(
+            self._replace(element, proportion, replacement) for element, proportion, replacement in value_triplets
+        )
