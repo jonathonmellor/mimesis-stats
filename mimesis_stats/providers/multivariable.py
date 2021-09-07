@@ -16,6 +16,9 @@ class MultiVariable(BaseStatsDataProvider):
     Returns a dictionary of name: value pairs, for later unpacking.
     """
 
+    class Meta:
+        name = "multi_variable"
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
 
         super().__init__(*args, **kwargs)

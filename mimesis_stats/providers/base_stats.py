@@ -19,13 +19,17 @@ class BaseStatsDataProvider(BaseDataProvider):
     Sets global seed for numpy.
     """
 
+    class Meta:
+        name = "base_stats"
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
 
         super().__init__(*args, **kwargs)
 
         np.random.seed(self.seed)
 
-    def _replace(self, value: Any, proportion: float = 0.0, replacement: Any = None) -> Any:
+    @staticmethod
+    def _replace(value: Any, proportion: float = 0.0, replacement: Any = None) -> Any:
         """
         Replace value with given probability.
         Normally used with a None replacement.

@@ -10,7 +10,7 @@ def test_dependent_variables():
     provider = MultiVariable()
 
     expected_result = {"response": "No", "count": None}
-    result = provider.dependent_variables(names, combinations, weights=weights)
+    result = provider.dependent_variables(names, options=combinations, weights=weights)
 
     assert result == expected_result
 
