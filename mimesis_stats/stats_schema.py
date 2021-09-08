@@ -39,7 +39,7 @@ class StatsSchema:
             variable.name: self.field(variable.provider_method, **variable.kwargs) for variable in self.blueprint
         }
 
-    def _unnest(self, generated_results: Dict) -> Dict:
+    def _unnest(self, generated_results: Dict, exclude: List[str] = []) -> Dict:
         """
         For multi-variable generation unest the defined sub-variables
 
@@ -48,20 +48,20 @@ class StatsSchema:
         # make more performant, can nested-ness be checked?
         d = {}
         for k, v in generated_results.items():
-            if isinstance(v, dict):
+            if isinstance(v, dict) and k not in exclude:
                 d.update(v)
             else:
                 d[k] = v
         return d
 
-    def create(self, iterations: int = 1) -> List[Any]:
+    def create(self, iterations: int = 1, exclude_from_unnesting: List[str] = []) -> List[Any]:
         """
         Creates a list of a fulfilled schemas.
 
         """
-        return [self._unnest(self.schema()) for _ in range(iterations)]
+        return [self._unnest(self.schema(), exclude=exclude_from_unnesting) for _ in range(iterations)]
 
-    def iterator(self, iterations: int = 1) -> Iterator[Any]:
+    def iterator(self, iterations: int = 1, exclude_from_unnesting: List[str] = []) -> Iterator[Any]:
         """
         Fulfills schema in a lazy way.
 
@@ -71,4 +71,4 @@ class StatsSchema:
             raise ValueError("The number of iterations must be greater than 0.")
 
         for item in range(iterations):
-            yield self._unnest(self.schema())
+            yield self._unnest(self.schema(), exclude=exclude_from_unnesting)
