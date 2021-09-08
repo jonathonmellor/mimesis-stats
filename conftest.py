@@ -14,7 +14,7 @@ def common_seed():
 
 @pytest.fixture
 def dummy_field(dummy_provider):
-    return Field(providers=[dummy_provider])
+    return Field(seed=42, providers=[dummy_provider])
 
 
 @pytest.fixture
@@ -23,6 +23,7 @@ def dummy_blueprint():
     bp = [
         GenerationVariable(name="dummy_number", provider_method="dummy.one"),
         GenerationVariable(name="dummy_string", provider_method="dummy.characters"),
+        GenerationVariable(name="dummy_dict", provider_method="dummy.dictionary"),
     ]
 
     return bp
@@ -40,6 +41,8 @@ def dummy_provider():
             returns 1
         characters
             returns "ABC"
+        dictionary
+            returns {"collins": "defines"}
         """
 
         class Meta:
@@ -49,10 +52,16 @@ def dummy_provider():
 
             super().__init__(*args, **kwargs)
 
+        @staticmethod
         def one():
             return 1
 
+        @staticmethod
         def characters():
             return "ABC"
+
+        @staticmethod
+        def dictionary():
+            return {"collins": "defines"}
 
     return DummyProvider
