@@ -56,6 +56,23 @@ def test_stats_schema_create(dummy_field, blueprint, iterations, expected_result
     assert result == expected_result
 
 
-def test_nested_generation():
+def test_nested_generation(dummy_field):
+    blueprint = [GenerationVariable(name="nest", provider_method="choice", items=["hard", dummy_field("dummy.one")])]
+    s_schema = StatsSchema(field=dummy_field, blueprint=blueprint)
 
-    return None
+    # not technically deterministic
+    n = 10000
+    # p FN = (0.5)^n, n~10,000, p~0, beyond floating point recording discrepency
+    result = s_schema.create(iterations=n)
+
+    values = [variable["nest"] for variable in result]
+
+    assert set(values) == set([1, "hard"])
+
+
+def test_standard_schema(dummy_field):
+
+    schema = lambda: {"basic": dummy_field("dummy.one")}  # noqa: E731
+    s_schema = StatsSchema(field=dummy_field, standard_schema=schema)
+
+    assert s_schema.create(iterations=1) == [{"basic": 1}]
