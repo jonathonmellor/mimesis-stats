@@ -54,3 +54,8 @@ def test_stats_schema_create(dummy_field, blueprint, iterations, expected_result
     result = s_schema.create(iterations=iterations)
 
     assert result == expected_result
+
+
+def test_nested_generation():
+
+    return None

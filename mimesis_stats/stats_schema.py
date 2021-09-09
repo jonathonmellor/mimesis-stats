@@ -10,11 +10,15 @@ from dataclasses import field
 from mimesis.schema import Field
 
 
-@dataclass
 class GenerationVariable:
-    name: str
-    provider_method: str
-    kwargs: Optional[Dict] = field(default_factory=lambda: {})
+    @dataclass
+    class WrappedVariable:
+        name: str
+        provider_method: str
+        kwargs: Optional[Dict] = field(default_factory=lambda: {})
+
+    def __init__(self, name: str, provider_method: str, kwargs: Optional[Dict] = {}) -> None:
+        self.stored = lambda: self.WrappedVariable(name=name, provider_method=provider_method, kwargs=kwargs)
 
 
 class StatsSchema:
@@ -36,7 +40,8 @@ class StatsSchema:
         Converts a blueprint object into a mimesis schema
         """
         return lambda: {
-            variable.name: self.field(variable.provider_method, **variable.kwargs) for variable in self.blueprint
+            variable.stored().name: self.field(variable.stored().provider_method, **variable.stored().kwargs)
+            for variable in self.blueprint
         }
 
     def _unnest(self, generated_results: Dict, exclude: List[str] = []) -> Dict:
