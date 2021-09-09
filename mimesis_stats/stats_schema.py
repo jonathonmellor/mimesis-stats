@@ -22,7 +22,14 @@ class GenerationVariable:
 
 
 class StatsSchema:
-    def __init__(self, field: Field, blueprint: List[GenerationVariable], *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self,
+        field: Field,
+        blueprint: List[GenerationVariable],
+        standard_schema: Optional[Callable] = None,
+        *args: Any,
+        **kwargs: Any
+    ) -> None:
         """
         Parameters
         ----------
@@ -33,7 +40,10 @@ class StatsSchema:
         """
         self.field = field
         self.blueprint = blueprint
-        self.schema = self._create_schema()
+        if standard_schema is not None:
+            self.schema = standard_schema
+        else:
+            self.schema = self._create_schema()
 
     def _create_schema(self) -> Callable:
         """
