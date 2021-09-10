@@ -53,8 +53,6 @@ class MultiVariable(BaseStatsDataProvider):
         -----
         Combinations can contain null values, for a more strictly missing value regime
         Combination elements can be other mimesis-like provider methods.
-        TODO
-        For use with a dataframe the intention is to unpack the returned dictionary.
 
         Examples
         --------

@@ -4,8 +4,24 @@ from typing import Dict
 from typing import Iterator
 from typing import List
 
+from mimesis.schema import Field
+
+from mimesis_stats.providers.distribution import Distribution
+from mimesis_stats.providers.multivariable import MultiVariable
+
+
+class StatsField(Field):
+    """ """
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+
+        super().__init__(*args, **kwargs)
+        self._gen.add_providers(*[Distribution, MultiVariable])
+
 
 class StatsSchema:
+    """ """
+
     def __init__(self, schema: Callable = lambda: {}, *args: Any, **kwargs: Any) -> None:
         """
         Parameters
@@ -27,8 +43,10 @@ class StatsSchema:
         for k, v in generated_results.items():
             if isinstance(v, dict) and k not in exclude:
                 d.update(v)
-            else:
+            elif k not in d:
                 d[k] = v
+            else:
+                raise KeyError(f"{k} variable name already in variable dictionary")
         return d
 
     def create(self, iterations: int = 1, exclude_from_unnesting: List[str] = []) -> List[Any]:
