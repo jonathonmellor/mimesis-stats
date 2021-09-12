@@ -146,7 +146,7 @@ schema_blueprint = lambda: {
         "dependent_variables",
         variable_names=["parent", "school_importance"],
         options=[
-            (True, truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma, # fmt: off
+            (True, truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma,
                                     loc=mu_true, scale=sigma)),
             (False, truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
                                     loc=mu_false, scale=sigma))
