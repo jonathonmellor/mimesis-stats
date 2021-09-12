@@ -172,22 +172,16 @@ Output:
 ```
 
 ```python
-# Check our calculated values for the school_importance
-# are similar to the truncated norm inputs
-# (The means will be off due to the truncation)
-parent_mean = df.groupby("parent").mean()
+# Check the summary stats of the two distributions
+# (remember mean of sample != mean of generation parameter due to truncation)
+parent_breakdown = df.groupby("parent").agg(["min", "max", "median", "mean"])
 
-print("Min: ", df["school_importance"].min().round(2))
-print("Max: ", df["school_importance"].max().round(2))
-print("means:\n", parent_mean)
+print(parent_breakdown)
 ```
 Output:
 ```s
-Min:  0.0
-Max:  9.86
-means:
-        school_importance
+                     min       max    median      mean
 parent
-False            4.831325
-True             7.766625
+False           0.000246  9.839971  4.129702  4.207750
+True            0.036771  9.864353  6.670191  6.435121
 ```
