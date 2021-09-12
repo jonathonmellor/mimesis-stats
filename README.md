@@ -109,7 +109,7 @@ We collect the following information:
 * Whether they are a parent or not - `"parent"`
 * How important they think schools are when buying a house (out of 10) - `"school_importance"`
 
-
+The `# fmt: off/on` lines stop the `black` formatter changing the schema blueprint.
 
 ```python
 import pandas as pd
