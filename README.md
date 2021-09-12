@@ -32,9 +32,17 @@ General use for discrete distributions, the main addition from base `mimesis` ar
 
 ```python console
 >>> from mimesis_stats.providers.distribution import Distribution
->>> Distribution.distrete_distribution(population=["First", "Second", "Third"], weights=[0.01, 0.01, 0.98])
+>>> Distribution.distrete_distribution(
+... population=["First", "Second", "Third"],
+... weights=[0.01, 0.01, 0.98]
+... )
 "Third"
->>> Distribution.distrete_distribution(population=["Apple", "Banana"], weights=[0.5, 0.5], null_prop=1.0, null_value=None)
+>>> Distribution.distrete_distribution(
+... population=["Apple", "Banana"],
+... weights=[0.5, 0.5],
+... null_prop=1.0,
+... null_value=None
+... )
 None
 ```
 
@@ -85,12 +93,16 @@ Example `mimesis_stats` schema:
 >>> from mimesis_stats.stats_schema import StatsField, StatsSchema
 >>> from numpy.random import pareto
 >>> field = StatsField(seed=42)
->>> schema_blueprint = lambda: {"name": field("person.full_name"), "salary": field("generic_distribution", func=pareto, a=3)}
+>>> schema_blueprint = lambda: {
+... "name": field("person.full_name"),
+... "salary": field("generic_distribution", func=pareto, a=3)
+... }
 >>> schema = StatsSchema(schema=schema_blueprint)
 >>> schema.create(iterations=1)
 [{'name': 'Annika Reilly', 'salary': 0.16932036645405568}]
 >>> schema.create(iterations=2)
-[{'name': 'Hank Day', 'salary': 1.7274682836709054}, {'name': 'Crystle Osborn', 'salary': 0.5510238033601347}]
+[{'name': 'Hank Day', 'salary': 1.7274682836709054},
+{'name': 'Crystle Osborn', 'salary': 0.5510238033601347}]
 ```
 
 ## Working with `pandas`
