@@ -83,7 +83,6 @@ Example `mimesis_stats` schema:
 
 ```python console
 >>> from mimesis_stats.stats_schema import StatsField, StatsSchema
->>> from mimesis_stats.stats
 >>> from numpy.random import pareto
 >>> field = StatsField(seed=42)
 >>> schema_blueprint = lambda: {"name": field("person.full_name"), "salary": field("generic_distribution", func=pareto, a=3)}
@@ -95,3 +94,88 @@ Example `mimesis_stats` schema:
 ```
 
 ## Working with `pandas`
+
+Standard use of the package will be with a dataframe.
+
+The code snippets below outline the suggested approach for generating a dataframe of random data, such as a survey responses.
+
+Consider the following basic survey.
+
+We collect the following information:
+
+* An ID code identifying each respondant - `"ID"`
+* Their email address - `"email"`
+* Their occupation - `"occupation"`
+* Whether they are a parent or not - `"parent"`
+* How important they think schools are when buying a house (out of 10) - `"school_importance"`
+
+
+
+```python
+import pandas as pd
+from mimesis_stats.stats_schema import StatsField, StatsSchema
+from scipy.stats import truncnorm
+
+# Define parameters of truncated normal
+lower = 0
+upper = 10
+mu_true = 7
+mu_false = 4
+sigma = 2.5
+
+field = StatsField(seed=42)
+
+# fmt: off
+schema_blueprint = lambda: {
+    "ID": field("random.custom_code", mask='SCHL#####', digit="#"),
+    "email": field("person.email"),
+    "occupation": field("person.occupation"),
+    "parent_school_importance": field(
+        "dependent_variables",
+        variable_names=["parent", "school_importance"],
+        options=[
+            (True, truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma, # fmt: off
+                                    loc=mu_true, scale=sigma)),
+            (False, truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
+                                    loc=mu_false, scale=sigma))
+        ],
+        weights=[0.3, 0.7],
+    )
+}
+# fmt: on
+
+schema = StatsSchema(schema_blueprint)
+
+df = pd.DataFrame(schema.create(iterations=1000))
+print(df.head())
+```
+Output:
+```s
+          ID                       email           occupation  parent  school_importance
+0  SCHL60227   pyoses1812@protonmail.com             Milklady   False           8.009516
+1  SCHL68040        dreep1871@yandex.com        Choreographer    True           7.193181
+2  SCHL25016  killing1844@protonmail.com            Scientist   False           6.773940
+3  SCHL52580         brach1847@gmail.com  Leaflet Distributor   False           0.384972
+4  SCHL86319     cyrenaic1813@yandex.com         Yacht Master    True           8.585937
+```
+
+```python
+# Check our calculated values for the school_importance
+# are similar to the truncated norm inputs
+# (The means will be off due to the truncation)
+parent_mean = df.groupby("parent").mean()
+
+print("Min: ", df["school_importance"].min().round(2))
+print("Max: ", df["school_importance"].max().round(2))
+print("means:\n", parent_mean)
+```
+Output:
+```s
+Min:  0.0
+Max:  9.86
+means:
+        school_importance
+parent
+False            4.831325
+True             7.766625
+```
