@@ -11,7 +11,6 @@ def read_requirements(file):
 
 requires = read_requirements("requirements.txt")
 
-
 dev_requires = read_requirements("requirements.dev.txt") + requires
 
 setuptools.setup(
@@ -22,12 +21,12 @@ setuptools.setup(
     description=("Extension of mimesis library for data generation with statistical properties"),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",  # TODO
+    url="https://github.com/jonathonmellor/mimesis-stats",
     project_urls={
-        "Bug Tracker": "",  # TODO
+        "Bug Tracker": "https://github.com/jonathonmellor/mimesis-stats/issues",
     },
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
