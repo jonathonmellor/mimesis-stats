@@ -1,5 +1,5 @@
 
-# `mimesis-stats`
+# mimesis_stats
 
 This package exists to extend the capabilities of [mimesis](https://mimesis.readthedocs.io/index.html) for use in statistical data pipelines.
 
@@ -16,7 +16,7 @@ However, `mimesis` data generation / providers have two primary limitations this
 
 `mimesis_stats` adds data providers for discrete choice distributions, as well as the ability to pass in custom functions, such as those from `numpy` or `scipy`
 
-# `mimesis-stats` providers
+# mimesis_stats providers
 
 The package contains two supplementary providers, the main object of generating `mimesis` data. One for producing discrete / continuous distributions and the other for dependent multi-variable samples.
 
@@ -94,8 +94,8 @@ Example `mimesis_stats` schema:
 >>> from numpy.random import pareto
 >>> field = StatsField(seed=42)
 >>> schema_blueprint = lambda: {
-... "name": field("person.full_name"),
-... "salary": field("generic_distribution", func=pareto, a=3)
+...     "name": field("person.full_name"),
+...     "salary": field("generic_distribution", func=pareto, a=3)
 ... }
 >>> schema = StatsSchema(schema=schema_blueprint)
 >>> schema.create(iterations=1)
