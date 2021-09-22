@@ -1,5 +1,5 @@
 
-# `mimesis-stats`
+# mimesis_stats
 
 This package exists to extend the capabilities of [mimesis](https://mimesis.readthedocs.io/index.html) for use in statistical data pipelines.
 
@@ -12,11 +12,13 @@ However, `mimesis` data generation / providers have two primary limitations this
 * Uni-variable - each data provider method produces a single value. Often in practice there are dependencies and relationships between different variables / columns.
 * Limited in statistical properties - `mimesis` draws samples using a uniform distribution. Real distributions are often weighted, or have specific properties (such as a gaussian)
 
-`mimesis_stats` uses a `StatsSchema` object that allows multiple variables related to one another to be created using methods from `Multivariable`.
+`mimesis_stats` uses a `StatsSchema` object that allows multiple variables related to one another to be created using methods from `MultiVariable`.
 
-`mimesis_stats` adds data providers for discrete choice distributions, as well as the ability to pass in custom functions, such as those from `numpy` or `scipy`
+`mimesis_stats` adds data providers for: discrete choice distributions, as well as the ability to pass in custom functions, such as those from `numpy` or `scipy`, or user defined functions.
 
-# `mimesis-stats` providers
+To see an example use case of this package scroll to the bottom of this document in the "Working with pandas" section.
+
+# mimesis_stats providers
 
 The package contains two supplementary providers, the main object of generating `mimesis` data. One for producing discrete / continuous distributions and the other for dependent multi-variable samples.
 
@@ -33,15 +35,15 @@ General use for discrete distributions, the main addition from base `mimesis` ar
 ```python console
 >>> from mimesis_stats.providers.distribution import Distribution
 >>> Distribution.distrete_distribution(
-... population=["First", "Second", "Third"],
-... weights=[0.01, 0.01, 0.98]
+...     population=["First", "Second", "Third"],
+...     weights=[0.01, 0.01, 0.98]
 ... )
 "Third"
 >>> Distribution.distrete_distribution(
-... population=["Apple", "Banana"],
-... weights=[0.5, 0.5],
-... null_prop=1.0,
-... null_value=None
+...     population=["Apple", "Banana"],
+...     weights=[0.5, 0.5],
+...     null_prop=1.0,
+...     null_value=None
 ... )
 None
 ```
@@ -81,7 +83,7 @@ For generating samples of many variables consistently it is recommended to use a
 
 A `StatsSchema` object requies a `schema` to be passed to it.
 
-A `schema_blueprint` is a `lambda` function that contains the code to generate each variable when called.
+A `schema`/`schema_blueprint` is a `lambda` function that contains the code to generate each variable when called.
 
 To define a `schema_blueprint` a `StatsField` (equivalent to `Field` from `mimesis`) needs to be declared. This sets a seed and a location basis for providers.
 
@@ -94,8 +96,8 @@ Example `mimesis_stats` schema:
 >>> from numpy.random import pareto
 >>> field = StatsField(seed=42)
 >>> schema_blueprint = lambda: {
-... "name": field("person.full_name"),
-... "salary": field("generic_distribution", func=pareto, a=3)
+...     "name": field("person.full_name"),
+...     "salary": field("generic_distribution", func=pareto, a=3)
 ... }
 >>> schema = StatsSchema(schema=schema_blueprint)
 >>> schema.create(iterations=1)
@@ -105,7 +107,7 @@ Example `mimesis_stats` schema:
 {'name': 'Crystle Osborn', 'salary': 0.5510238033601347}]
 ```
 
-## Working with `pandas`
+## Working with pandas
 
 Standard use of the package will be with a dataframe.
 
@@ -146,10 +148,10 @@ schema_blueprint = lambda: {
         "dependent_variables",
         variable_names=["parent", "school_importance"],
         options=[
-            (True, truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma,
-                                    loc=mu_true, scale=sigma)),
-            (False, truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
-                                    loc=mu_false, scale=sigma))
+            (True, round(truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma,
+                                    loc=mu_true, scale=sigma))),
+            (False, round(truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
+                                    loc=mu_false, scale=sigma)))
         ],
         weights=[0.3, 0.7],
     )
@@ -164,11 +166,11 @@ print(df.head())
 Output:
 ```s
           ID                       email           occupation  parent  school_importance
-0  SCHL60227   pyoses1812@protonmail.com             Milklady   False           8.009516
-1  SCHL68040        dreep1871@yandex.com        Choreographer    True           7.193181
-2  SCHL25016  killing1844@protonmail.com            Scientist   False           6.773940
-3  SCHL52580         brach1847@gmail.com  Leaflet Distributor   False           0.384972
-4  SCHL86319     cyrenaic1813@yandex.com         Yacht Master    True           8.585937
+0  SCHL60227   pyoses1812@protonmail.com             Milklady   False                  8
+1  SCHL68040        dreep1871@yandex.com        Choreographer    True                  7
+2  SCHL25016  killing1844@protonmail.com            Scientist   False                  7
+3  SCHL52580         brach1847@gmail.com  Leaflet Distributor   False                  0
+4  SCHL86319     cyrenaic1813@yandex.com         Yacht Master    True                  9
 ```
 
 ```python
@@ -180,8 +182,9 @@ print(parent_breakdown)
 ```
 Output:
 ```s
-                     min       max    median      mean
+       school_importance
+                     min max median      mean
 parent
-False           0.000246  9.839971  4.129702  4.207750
-True            0.036771  9.864353  6.670191  6.435121
+False                  0  10      4  4.219477
+True                   0  10      7  6.432692
 ```
