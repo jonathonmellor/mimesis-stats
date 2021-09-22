@@ -21,6 +21,7 @@ setuptools.setup(
     description=("Extension of mimesis library for data generation with statistical properties"),
     long_description=long_description,
     long_description_content_type="text/markdown",
+    download_url="https://github.com/jonathonmellor/mimesis-stats/archive/refs/tags/v0.0.1.tar.gz",
     url="https://github.com/jonathonmellor/mimesis-stats",
     project_urls={
         "Bug Tracker": "https://github.com/jonathonmellor/mimesis-stats/issues",
