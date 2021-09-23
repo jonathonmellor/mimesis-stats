@@ -37,6 +37,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages(where="src"),
+    package_dir={"": "src"},
     python_requires=">=3.6.8",
     install_requires=install_requires,
     extras_require={"dev": dev_install_requires, "ci": dev_install_requires},
