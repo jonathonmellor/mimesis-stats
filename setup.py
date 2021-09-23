@@ -19,13 +19,13 @@ dev_install_requires = dev_specific_install_requires + install_requires
 
 setuptools.setup(
     name="mimesis_stats",
-    version="0.0.2",
+    version="0.0.3",
     author="Jonathon Mellor",
     author_email="mellorjonathon1@gmail.com",
     description=("Extension of mimesis library for data generation with statistical properties"),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    download_url="https://github.com/jonathonmellor/mimesis-stats/archive/refs/tags/v0.0.2.tar.gz",
+    download_url="https://github.com/jonathonmellor/mimesis-stats/archive/refs/tags/v0.0.3.tar.gz",
     url="https://github.com/jonathonmellor/mimesis-stats",
     project_urls={
         "Bug Tracker": "https://github.com/jonathonmellor/mimesis-stats/issues",
