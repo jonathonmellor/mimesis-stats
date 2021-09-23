@@ -128,3 +128,35 @@ def test_pandas_survey_regression(data_regression):
     result_df = pd.DataFrame(schema.create(iterations=50)).to_dict()
 
     data_regression.check(result_df)
+
+
+def test_integration_schema_prodivers():
+
+    # Test will be tied to rng issues at time of generation
+    # effectively a low tier regression test that's now fixed
+    expected = [
+        {"ID": "SCHL60227", "consent": "Yes", "parent": True, "school_importance": 10},
+        {"ID": "SCHL68040", "consent": None, "parent": False, "school_importance": 5},
+    ]
+
+    field = StatsField(seed=42)
+    # fmt: off
+    schema_blueprint = lambda: { # noqa E731
+        "ID": field("random.custom_code", mask='SCHL#####', digit="#"),
+        "consent": field("discrete_distribution", population=["Yes", "No"], weights=[0.5, 0.5], null_prop=0.5),
+        "parent_school_importance": field(
+            "dependent_variables",
+            variable_names=["parent", "school_importance"],
+            options=[
+                (True, field("discrete_distribution", population=[7, 8, 9, 10], weights=[0.1, 0.2, 0.3, 0.4])),
+                (False, field("generic_distribution", func=lambda: round(truncnorm.rvs(a=(0-4)/2.5, b=(10-4)/2.5,
+                    loc=4, scale=2.5)))) # noqa 128
+            ],
+            weights=[0.3, 0.7],
+        )
+    }
+    # fmt: on
+    schema = StatsSchema(schema_blueprint)
+    actual = schema.create(iterations=2)
+
+    assert actual == expected
