@@ -1,19 +1,17 @@
-import pathlib
-
-import pkg_resources
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+install_requires = ["mimesis>=4.1.3", "numpy>=1.19.5"]
 
-with pathlib.Path("requirements.txt").open() as requirements_txt:
-    install_requires = [str(requirement) for requirement in pkg_resources.parse_requirements(requirements_txt)]
-
-with pathlib.Path("requirements.dev.txt").open() as dev_requirements_txt:
-    dev_specific_install_requires = [
-        str(requirement) for requirement in pkg_resources.parse_requirements(dev_requirements_txt)
-    ]
+dev_specific_install_requires = [
+    "pre-commit==2.12.1",
+    "pandas>=1.1.5",
+    "pytest>=3.6,<4",
+    "pytest-regressions==2.2.0",
+    "scipy>=1.5.4",
+]
 
 dev_install_requires = dev_specific_install_requires + install_requires
 
