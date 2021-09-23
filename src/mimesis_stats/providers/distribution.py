@@ -4,7 +4,6 @@ from typing import Callable
 from typing import List
 
 import numpy as np
-
 from mimesis_stats.providers.base_stats import BaseStatsDataProvider
 
 

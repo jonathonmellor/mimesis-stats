@@ -5,7 +5,6 @@ from typing import Tuple
 from typing import Union
 
 import numpy as np
-
 from mimesis_stats.providers.base_stats import BaseStatsDataProvider
 
 

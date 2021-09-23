@@ -5,7 +5,6 @@ from typing import Iterator
 from typing import List
 
 from mimesis.schema import Field
-
 from mimesis_stats.providers.distribution import Distribution
 from mimesis_stats.providers.multivariable import MultiVariable
 
