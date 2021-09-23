@@ -1,17 +1,21 @@
+import pathlib
+
+import pkg_resources
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 
-def read_requirements(file):
-    with open(file) as f:
-        return f.read().splitlines()
+with pathlib.Path("requirements.txt").open() as requirements_txt:
+    install_requires = [str(requirement) for requirement in pkg_resources.parse_requirements(requirements_txt)]
 
+with pathlib.Path("requirements.dev.txt").open() as dev_requirements_txt:
+    dev_specific_install_requires = [
+        str(requirement) for requirement in pkg_resources.parse_requirements(dev_requirements_txt)
+    ]
 
-requires = read_requirements("requirements.txt")
-
-dev_requires = read_requirements("requirements.dev.txt") + requires
+dev_install_requires = dev_specific_install_requires + install_requires
 
 setuptools.setup(
     name="mimesis_stats",
@@ -36,6 +40,6 @@ setuptools.setup(
     ],
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6.8",
-    install_requires=requires,
-    extras_require={"dev": dev_requires, "ci": dev_requires},
+    install_requires=install_requires,
+    extras_require={"dev": dev_install_requires, "ci": dev_install_requires},
 )
