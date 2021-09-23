@@ -1,5 +1,8 @@
+import pandas as pd
 import pytest
+from scipy.stats import truncnorm
 
+from mimesis_stats.stats_schema import StatsField
 from mimesis_stats.stats_schema import StatsSchema
 
 
@@ -89,3 +92,39 @@ def test_nested_generation_deterministic(dummy_field):
     values = [variable["nest"] for variable in result]
 
     assert set(values) == set(["A", "B", "hard"])
+
+
+def test_pandas_survey_regression(data_regression):
+    """Uses example from README"""
+
+    # Define parameters of truncated normal
+    lower = 0
+    upper = 10
+    mu_true = 7
+    mu_false = 4
+    sigma = 2.5
+
+    field = StatsField(seed=42)
+
+    # fmt: off
+    schema_blueprint = lambda: { # noqa E731
+        "ID": field("random.custom_code", mask='SCHL#####', digit="#"),
+        "email": field("person.email"),
+        "occupation": field("person.occupation"),
+        "parent_school_importance": field(
+            "dependent_variables",
+            variable_names=["parent", "school_importance"],
+            options=[
+                (True, round(truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma,
+                                        loc=mu_true, scale=sigma))), # noqa E731
+                (False, round(truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
+                                        loc=mu_false, scale=sigma))) # noqa E731
+            ],
+            weights=[0.3, 0.7],
+        )
+    }
+    # fmt: on
+    schema = StatsSchema(schema_blueprint)
+    result_df = pd.DataFrame(schema.create(iterations=50)).to_dict()
+
+    data_regression.check(result_df)

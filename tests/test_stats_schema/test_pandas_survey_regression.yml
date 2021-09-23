@@ -1,0 +1,255 @@
+ID:
+  0: SCHL60227
+  1: SCHL68040
+  2: SCHL25016
+  3: SCHL52580
+  4: SCHL86319
+  5: SCHL30086
+  6: SCHL87593
+  7: SCHL58685
+  8: SCHL70220
+  9: SCHL21263
+  10: SCHL32296
+  11: SCHL61713
+  12: SCHL96568
+  13: SCHL72032
+  14: SCHL29836
+  15: SCHL39422
+  16: SCHL52583
+  17: SCHL29500
+  18: SCHL16740
+  19: SCHL39598
+  20: SCHL07652
+  21: SCHL61449
+  22: SCHL82519
+  23: SCHL82661
+  24: SCHL75750
+  25: SCHL30988
+  26: SCHL30890
+  27: SCHL40771
+  28: SCHL45284
+  29: SCHL25723
+  30: SCHL96451
+  31: SCHL23522
+  32: SCHL06298
+  33: SCHL02621
+  34: SCHL95478
+  35: SCHL10444
+  36: SCHL76904
+  37: SCHL38214
+  38: SCHL42294
+  39: SCHL85098
+  40: SCHL99814
+  41: SCHL24039
+  42: SCHL27449
+  43: SCHL95712
+  44: SCHL95570
+  45: SCHL55819
+  46: SCHL01562
+  47: SCHL18256
+  48: SCHL45592
+  49: SCHL72362
+email:
+  0: pyoses1812@protonmail.com
+  1: dreep1871@yandex.com
+  2: killing1844@protonmail.com
+  3: brach1847@gmail.com
+  4: cyrenaic1813@yandex.com
+  5: spiracular2014@yandex.com
+  6: sensorium1942@live.com
+  7: cortina2016@yandex.com
+  8: silicon1910@yahoo.com
+  9: anathemas1994@gmail.com
+  10: seconds1935@yahoo.com
+  11: querimans1863@protonmail.com
+  12: gravelliness1950@gmail.com
+  13: forehead1835@outlook.com
+  14: carpocarpal1948@protonmail.com
+  15: defeatism1994@yandex.com
+  16: cadmium1986@live.com
+  17: realest1907@yahoo.com
+  18: riverish1836@protonmail.com
+  19: beaux1925@outlook.com
+  20: eagle1938@live.com
+  21: coater1966@yandex.com
+  22: hydrograph1816@yandex.com
+  23: angriness1833@live.com
+  24: aggression1961@outlook.com
+  25: cringingly2002@protonmail.com
+  26: aligner1871@yandex.com
+  27: sciomachiology1934@protonmail.com
+  28: inadventurous1985@outlook.com
+  29: blackberry2052@yandex.com
+  30: tmeses1878@gmail.com
+  31: decadactylous1832@protonmail.com
+  32: freemen2039@live.com
+  33: peacemaker1805@yahoo.com
+  34: drakes1936@protonmail.com
+  35: admissions2022@gmail.com
+  36: emu1934@live.com
+  37: skere1854@yandex.com
+  38: skere1901@protonmail.com
+  39: boiko1882@yahoo.com
+  40: unjamming1965@outlook.com
+  41: lieve1985@gmail.com
+  42: conserver1923@yandex.com
+  43: chilicote2048@gmail.com
+  44: bunkoed1864@outlook.com
+  45: abhorrent1884@protonmail.com
+  46: afterlife2016@outlook.com
+  47: codicil1902@outlook.com
+  48: vault1991@live.com
+  49: intendancies1861@outlook.com
+occupation:
+  0: Milklady
+  1: Choreographer
+  2: Scientist
+  3: Leaflet Distributor
+  4: Yacht Master
+  5: Legal Advisor
+  6: Administration Manager
+  7: Plant Fitter
+  8: Planning Engineer
+  9: Chartered Accountant
+  10: Bakery Manager
+  11: Purchase Ledger Clerk
+  12: Product Manager
+  13: Bank Messenger
+  14: Car Dealer
+  15: Millwright
+  16: Health Service
+  17: Medical Supplier
+  18: Horse Breeder
+  19: Health Therapist
+  20: Window Dresser
+  21: Bodyguard
+  22: Park Keeper
+  23: Laminator
+  24: Land Surveyor
+  25: Stage Manager
+  26: Marble Mason
+  27: Servant
+  28: Lecturer
+  29: Catering Manager
+  30: Health Advisor
+  31: Radio Controller
+  32: Travel Representative
+  33: Doctor
+  34: Plant Fitter
+  35: Handyman
+  36: Temperature Time
+  37: Off Shore
+  38: Groom
+  39: Undertaker
+  40: Technical Analyst
+  41: Ornithologist
+  42: Camera Repairer
+  43: Bus Company
+  44: Foster Parent
+  45: Medical Practitioner
+  46: Lampshade Maker
+  47: Paint Consultant
+  48: Shooting Instructor
+  49: Marine Consultant
+parent:
+  0: false
+  1: true
+  2: false
+  3: false
+  4: true
+  5: false
+  6: false
+  7: false
+  8: true
+  9: true
+  10: true
+  11: false
+  12: false
+  13: false
+  14: true
+  15: false
+  16: false
+  17: false
+  18: true
+  19: false
+  20: false
+  21: false
+  22: true
+  23: true
+  24: false
+  25: true
+  26: false
+  27: true
+  28: false
+  29: false
+  30: false
+  31: false
+  32: true
+  33: false
+  34: false
+  35: false
+  36: true
+  37: false
+  38: false
+  39: false
+  40: false
+  41: false
+  42: true
+  43: true
+  44: false
+  45: false
+  46: false
+  47: false
+  48: false
+  49: true
+school_importance:
+  0: 8
+  1: 7
+  2: 7
+  3: 0
+  4: 9
+  5: 3
+  6: 3
+  7: 3
+  8: 6
+  9: 7
+  10: 7
+  11: 8
+  12: 1
+  13: 2
+  14: 2
+  15: 3
+  16: 2
+  17: 8
+  18: 7
+  19: 1
+  20: 3
+  21: 3
+  22: 4
+  23: 10
+  24: 6
+  25: 8
+  26: 2
+  27: 7
+  28: 3
+  29: 7
+  30: 5
+  31: 6
+  32: 7
+  33: 1
+  34: 4
+  35: 4
+  36: 5
+  37: 8
+  38: 7
+  39: 7
+  40: 7
+  41: 2
+  42: 8
+  43: 7
+  44: 3
+  45: 4
+  46: 9
+  47: 4
+  48: 1
+  49: 7
