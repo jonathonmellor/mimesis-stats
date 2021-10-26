@@ -10,7 +10,11 @@ from mimesis_stats.providers.multivariable import MultiVariable
 
 
 class StatsField(Field):
-    """ """
+    """
+    Class for generating single element data.
+    Inherets from mimesis Field approach.
+    Adds mimesis_stats providers by default.
+    """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
 
@@ -19,7 +23,15 @@ class StatsField(Field):
 
 
 class StatsSchema:
-    """ """
+    """
+    Class that uses blueprint of variable specification (lambda function) to
+    eagerly (create) or lazily (iterator) produce data of the form given.
+
+    Notes
+    -----
+    The _unest method is the main change from `mimesis` itself, allowing for multivariable
+    generation, the unesting of generated dictionaries.
+    """
 
     def __init__(self, schema: Callable = lambda: {}, *args: Any, **kwargs: Any) -> None:
         """
@@ -36,6 +48,20 @@ class StatsSchema:
         For multi-variable generation unest the defined sub-variables
 
         Unnests nested dicts if they are nested.
+
+        Parameters
+        ----------
+        generated_results
+            Single row of generated data to be unpacked
+        exclude
+            Specify which results to not unnest even if a dictionary is found
+
+        Notes
+        -----
+        Only unests to single level of depth.
+        exclude will only be used if you want a dictionary in a column.
+        The method by default checks whether the object is a dict, so
+        non-dict variables can be given.
         """
         # make more performant, can nested-ness be checked?
         d = {}
@@ -52,6 +78,16 @@ class StatsSchema:
         """
         Creates a list of a fulfilled schemas.
 
+        Parameters
+        ----------
+        iterations
+            How many records to create
+        exclude_from_unenesting
+            Which dict variables to not perform unnesting on
+
+        Notes
+        -----
+        Typical method used for generation for dataframes.
         """
         return [self._unnest(self.schema(), exclude=exclude_from_unnesting) for _ in range(iterations)]
 
@@ -59,6 +95,12 @@ class StatsSchema:
         """
         Fulfills schema in a lazy way.
 
+        Parameters
+        ----------
+        iterations
+            How many records to create
+        exclude_from_unenesting
+            Which dict variables to not perform unnesting on
         """
 
         if iterations < 1:
