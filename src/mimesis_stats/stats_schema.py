@@ -5,8 +5,9 @@ from typing import Iterator
 from typing import List
 
 from mimesis.schema import Field
-from mimesis_stats.providers.distribution import Distribution
-from mimesis_stats.providers.multivariable import MultiVariable
+
+from .providers.distribution import Distribution
+from .providers.multivariable import MultiVariable
 
 
 class StatsField(Field):
