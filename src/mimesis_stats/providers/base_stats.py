@@ -1,6 +1,7 @@
 from typing import Any
 from typing import List
 from typing import Tuple
+from typing import Union
 
 import numpy as np
 from mimesis.providers.base import BaseDataProvider
@@ -61,7 +62,9 @@ class BaseStatsDataProvider(BaseDataProvider):
         else:
             return value
 
-    def _replace_multiple(self, values: Tuple[Any], proportions: List[float], replacements: Any) -> Tuple[Any, ...]:
+    def _replace_multiple(
+        self, values: Tuple[Any], proportions: Union[List[float], int], replacements: Any
+    ) -> Tuple[Any, ...]:
         """
         Adaptation of self._replace() for multiple values.
 
@@ -93,7 +96,7 @@ class BaseStatsDataProvider(BaseDataProvider):
         if replacements is None:
             replacements = [None] * len(values)
 
-        value_triplets = zip(values, proportions, replacements)
+        value_triplets = zip(values, proportions, replacements)  # type: ignore
         return tuple(
             self._replace(element, proportion, replacement) for element, proportion, replacement in value_triplets
         )

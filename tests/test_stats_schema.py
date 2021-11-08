@@ -1,7 +1,8 @@
+import pandas as pd
 import pytest
-
-from mimesis_stats.stats_schema import GenerationVariable
+from mimesis_stats.stats_schema import StatsField
 from mimesis_stats.stats_schema import StatsSchema
+from scipy.stats import truncnorm
 
 
 @pytest.mark.parametrize(
@@ -20,37 +21,141 @@ from mimesis_stats.stats_schema import StatsSchema
         ),
     ],
 )
-def test_unnest(dummy_field, dummy_blueprint, input, exclude, expected_result):
+def test_unnest(input, exclude, expected_result):
 
-    s_schema = StatsSchema(field=dummy_field, blueprint=dummy_blueprint)
+    s_schema = StatsSchema()
 
     assert s_schema._unnest(input, exclude=exclude) == expected_result
 
 
 @pytest.mark.parametrize(
-    "blueprint, iterations, expected_result",
+    "inputs, iterations, expected_result",
     [
-        ([GenerationVariable(name="dummy_number", provider_method="dummy.one")], 1, [{"dummy_number": 1}]),
+        ({"v1": {"name": "dummy_number", "provider_method": "dummy.one"}}, 1, [{"dummy_number": 1}]),
         (
-            [GenerationVariable(name="dummy_number", provider_method="dummy.one")],
+            {"v1": {"name": "dummy_number", "provider_method": "dummy.one"}},
             2,
             [{"dummy_number": 1}, {"dummy_number": 1}],
         ),
-        ([GenerationVariable(name="dummy_dict", provider_method="dummy.dictionary")], 1, [{"collins": "defines"}]),
+        ({"v1": {"name": "dummy_dict", "provider_method": "dummy.dictionary"}}, 1, [{"collins": "defines"}]),
         (
-            [
-                GenerationVariable(name="dummy_number", provider_method="dummy.one"),
-                GenerationVariable(name="dummy_string", provider_method="dummy.characters"),
-            ],
+            {
+                "v1": {"name": "dummy_number", "provider_method": "dummy.one"},
+                "v2": {"name": "dummy_string", "provider_method": "dummy.characters"},
+            },
             1,
             [{"dummy_number": 1, "dummy_string": "ABC"}],
         ),
     ],
 )
-def test_stats_schema_create(dummy_field, blueprint, iterations, expected_result):
+def test_stats_schema_create(dummy_field, inputs, iterations, expected_result):
 
-    s_schema = StatsSchema(field=dummy_field, blueprint=blueprint)
+    schema = lambda: {  # noqa: E731
+        variable["name"]: dummy_field(variable["provider_method"]) for variable in inputs.values()
+    }
+    s_schema = StatsSchema(schema=schema)
 
     result = s_schema.create(iterations=iterations)
 
     assert result == expected_result
+
+
+def test_nested_generation(dummy_field):
+    schema = lambda: {"nest": dummy_field("choice", items=["hard", dummy_field("dummy.one")])}  # noqa: E731
+
+    s_schema = StatsSchema(schema=schema)
+
+    # not technically deterministic
+    n = 10000
+    # p FN = (0.5)^n, n~10,000, p~0, beyond floating point recording discrepency
+    result = s_schema.create(iterations=n)
+
+    values = [variable["nest"] for variable in result]
+
+    assert set(values) == set([1, "hard"])
+
+
+def test_nested_generation_deterministic(dummy_field):
+
+    schema = lambda: {  # noqa: E731
+        "nest": dummy_field("choice", items=["hard", dummy_field("choice", items=["A", "B"])])
+    }
+
+    s_schema = StatsSchema(schema=schema)
+
+    # not technically deterministic
+    n = 10000
+    # p FN = (0.5)^n, n~10,000, p~0, beyond floating point recording discrepency
+    result = s_schema.create(iterations=n)
+
+    values = [variable["nest"] for variable in result]
+
+    assert set(values) == set(["A", "B", "hard"])
+
+
+def test_pandas_survey_regression(data_regression):
+    """Uses example from README"""
+
+    # Define parameters of truncated normal
+    lower = 0
+    upper = 10
+    mu_true = 7
+    mu_false = 4
+    sigma = 2.5
+
+    field = StatsField(seed=42)
+
+    # fmt: off
+    schema_blueprint = lambda: { # noqa E731
+        "ID": field("random.custom_code", mask='SCHL#####', digit="#"),
+        "email": field("person.email"),
+        "occupation": field("person.occupation"),
+        "parent_school_importance": field(
+            "dependent_variables",
+            variable_names=["parent", "school_importance"],
+            options=[
+                (True, round(truncnorm.rvs(a=(lower-mu_true)/sigma, b=(upper-mu_true)/sigma,
+                                        loc=mu_true, scale=sigma))), # noqa E731
+                (False, round(truncnorm.rvs(a=(lower-mu_false)/sigma, b=(upper-mu_false)/sigma,
+                                        loc=mu_false, scale=sigma))) # noqa E731
+            ],
+            weights=[0.3, 0.7],
+        )
+    }
+    # fmt: on
+    schema = StatsSchema(schema_blueprint)
+    result_df = pd.DataFrame(schema.create(iterations=50)).to_dict()
+
+    data_regression.check(result_df)
+
+
+def test_integration_schema_prodivers():
+
+    # Test will be tied to rng issues at time of generation
+    # effectively a low tier regression test that's now fixed
+    expected = [
+        {"ID": "SCHL60227", "consent": "Yes", "parent": True, "school_importance": 10},
+        {"ID": "SCHL68040", "consent": None, "parent": False, "school_importance": 5},
+    ]
+
+    field = StatsField(seed=42)
+    # fmt: off
+    schema_blueprint = lambda: { # noqa E731
+        "ID": field("random.custom_code", mask='SCHL#####', digit="#"),
+        "consent": field("discrete_distribution", population=["Yes", "No"], weights=[0.5, 0.5], null_prop=0.5),
+        "parent_school_importance": field(
+            "dependent_variables",
+            variable_names=["parent", "school_importance"],
+            options=[
+                (True, field("discrete_distribution", population=[7, 8, 9, 10], weights=[0.1, 0.2, 0.3, 0.4])),
+                (False, field("generic_distribution", func=lambda: round(truncnorm.rvs(a=(0-4)/2.5, b=(10-4)/2.5,
+                    loc=4, scale=2.5)))) # noqa 128
+            ],
+            weights=[0.3, 0.7],
+        )
+    }
+    # fmt: on
+    schema = StatsSchema(schema_blueprint)
+    actual = schema.create(iterations=2)
+
+    assert actual == expected
