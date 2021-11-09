@@ -18,6 +18,16 @@ However, `mimesis` data generation / providers have two primary limitations this
 
 To see an example use case of this package scroll to the bottom of this document in the "Working with pandas" section.
 
+## Installation
+
+This package is available on PyPI, but it is recommended to install via GitHub while it is in development.
+
+Obtaining the most recent version of the package can be done using:
+
+```sh
+> pip install git+https://github.com/jonathonmellor/mimesis-stats@main
+```
+
 # mimesis_stats providers
 
 The package contains two supplementary providers, the main object of generating `mimesis` data. One for producing discrete / continuous distributions and the other for dependent multi-variable samples.
