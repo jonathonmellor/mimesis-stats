@@ -44,12 +44,12 @@ General use for discrete distributions, the main addition from base `mimesis` ar
 
 ```python console
 >>> from mimesis_stats.providers.distribution import Distribution
->>> Distribution.distrete_distribution(
+>>> Distribution().discrete_distribution(
 ...     population=["First", "Second", "Third"],
 ...     weights=[0.01, 0.01, 0.98]
 ... )
 "Third"
->>> Distribution.distrete_distribution(
+>>> Distribution().discrete_distribution(
 ...     population=["Apple", "Banana"],
 ...     weights=[0.5, 0.5],
 ...     null_prop=1.0,
@@ -66,7 +66,7 @@ In practice, produced dictionary key-value pairs can be separated into different
 
 ```python console
 >>> from mimesis_stats.providers.multivariable import MultiVariable
->>> MultiVariable.dependent_variables(
+>>> MultiVariable().dependent_variables(
 ...     variable_names=["consent", "favourite_fruit"],
 ...     options=[("Yes", "Lemon"), ("No", None)],
 ...     weights=[0.7, 0.3]
@@ -79,7 +79,7 @@ Within the possible combinations other provider calls can be made to extend the 
 ```python console
 >>> from mimesis_stats.providers.multivariable import MultiVariable
 >>> from mimesis import Food
->>> MultiVariable.dependent_variables(
+>>> MultiVariable().dependent_variables(
 ...     variable_names=["consent", "favourite_fruit"],
 ...     options=[("Yes", Food.fruit()), ("No", None)],
 ...     weights=[0.9, 0.1]
