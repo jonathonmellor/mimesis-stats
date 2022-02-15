@@ -1,5 +1,5 @@
 import pytest
-
+import sympy.stats as symstats
 from mimesis_stats.providers.distribution import Distribution
 
 
@@ -39,3 +39,17 @@ def test_generic_distribution_fixed(population, return_value, return_max_functio
     generator = Distribution()
 
     assert generator.generic_distribution(func=return_max_function, population=population) == return_value
+
+
+@pytest.mark.parametrize(
+    "sides",
+    [n for n in range(1, 6)],
+)
+def test_generic_expression_fixed(sides):
+    """Test does not require seed setting for deterministic results"""
+
+    expr = symstats.Die("X", sides)
+    generator = Distribution()
+    print(symstats.sample(expr))
+
+    assert generator.generic_expression(expr=expr) in set(range(1, sides + 1))
