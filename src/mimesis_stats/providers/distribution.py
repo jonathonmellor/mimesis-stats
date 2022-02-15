@@ -4,6 +4,7 @@ from typing import Callable
 from typing import List
 
 import numpy as np
+import sympy.stats as symstats
 from mimesis_stats.providers.base_stats import BaseStatsDataProvider
 
 
@@ -17,6 +18,8 @@ class Distribution(BaseStatsDataProvider):
         Discrete choices (categorical-type) variables
     generic_distribution
         Accepts functions for custom distribution.
+    generic_expression
+        sample from a sympy distribution.
     """
 
     class Meta:
@@ -87,3 +90,30 @@ class Distribution(BaseStatsDataProvider):
         return self._replace(
             np.random.choice(population, size=None, p=weights, replace=False), null_prop, replacement=null_value
         )
+
+    def generic_expression(self, expr: symstats.rv.RandomSymbol, null_prop: float = 0, null_value: Any = None) -> Any:
+        """
+        Draw from any distribution defined by a sympy distribution expression.
+        Replace a proportion with None values.
+
+        Parameters
+        ----------
+        expr
+            sympy expression representing a statistical distribution
+        null_prop
+            Proportion of values to replace as null
+        null_value
+            The (null) value to replace a sample with
+
+        Returns
+        -------
+        Single value from sample of expression distribution
+
+        Examples
+        --------
+        >>>from sympy.stats import Normal
+        >>>SymbolicDistribution.generic_expression(expression=Normal("Y", 0, 1), null_prop=0.0)
+        0.5674145194875
+        """
+
+        return self._replace(symstats.sample(expr, seed=self.seed), null_prop, null_value)
