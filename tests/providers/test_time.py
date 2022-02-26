@@ -41,6 +41,7 @@ def test_load_time(input, format, return_value):
 )
 def test_sample_time(start, end, distribution, return_value):
     """Test sampling of datetime"""
+    # consider testing **kwargs
 
     generator = TimeDistribution()
 
