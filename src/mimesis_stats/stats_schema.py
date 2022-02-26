@@ -5,9 +5,9 @@ from typing import Iterator
 from typing import List
 
 from mimesis.schema import Field
-
-from .providers.distribution import Distribution
-from .providers.multivariable import MultiVariable
+from mimesis_stats.providers.distribution import Distribution
+from mimesis_stats.providers.multivariable import MultiVariable
+from mimesis_stats.providers.time import TimeDistribution
 
 
 class StatsField(Field):
@@ -20,7 +20,7 @@ class StatsField(Field):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
 
         super().__init__(*args, **kwargs)
-        self._gen.add_providers(*[Distribution, MultiVariable])
+        self._gen.add_providers(*[Distribution, TimeDistribution, MultiVariable])
 
 
 class StatsSchema:
