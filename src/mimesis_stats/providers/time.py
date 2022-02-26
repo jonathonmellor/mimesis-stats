@@ -28,10 +28,13 @@ class TimeDistribution(Distribution):
         return dt
 
     def _sample_time(
-        self, start: datetime.datetime, end: datetime.datetime, distribution: Callable
+        self, start: datetime.datetime, end: datetime.datetime, distribution: Callable, **kwargs: Any
     ) -> datetime.datetime:
-        """Sample a datetime based on a range and distribution"""
-        proportion = distribution()
+        """
+        Sample a datetime based on a range and distribution
+        Distribution must be normalised (bound by [0, 1])
+        """
+        proportion = distribution(**kwargs)
 
         assert 0 <= proportion <= 1, "distribution must be a probability density function bound by [0, 1]"
 
@@ -47,20 +50,21 @@ class TimeDistribution(Distribution):
         output_format=None,
         output_type=datetime.datetime,
         distribution: Callable = np.random.uniform,
+        **kwargs,
     ) -> Union[datetime.datetime, datetime.date, datetime.time, str]:
 
         sdatetime = self._load_time(start, input_format)
         edatetime = self._load_time(end, input_format)
 
-        pdatetime = self._sample_time(start=sdatetime, end=edatetime, distribution=distribution)
+        pdatetime = self._sample_time(start=sdatetime, end=edatetime, distribution=distribution, **kwargs)
 
-        if isinstance(output_type, datetime.datetime):
+        if output_type == datetime.datetime:
             return pdatetime
-        if isinstance(output_type, str):
+        if output_type == str:
             return pdatetime.strftime(output_format)
-        if isinstance(output_type, datetime.date):
+        if output_type == datetime.date:
             return pdatetime.date()
-        if isinstance(output_type, datetime.date):
+        if output_type == datetime.time:
             return pdatetime.time()
         else:
             raise TypeError(f"Issue with output_type as: {output_type}")
